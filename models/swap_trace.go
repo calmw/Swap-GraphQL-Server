@@ -1,9 +1,5 @@
 package models
 
-import (
-	"time"
-)
-
 type SwapTrace struct {
 	Id uint64 `gorm:"column:id;primaryKey" json:"id"`
 
@@ -35,11 +31,12 @@ type SwapTrace struct {
 	From  string `gorm:"column:from" json:"from"`
 	Value string `gorm:"column:value" json:"value"`
 
-	SwapType    int       `gorm:"column:swap_type" json:"swap_type"` // 1 swap; 2 withdraw 3 wbnbTransfers 4 transfers
-	TxHash      string    `gorm:"column:tx_hash" json:"tx_hash"`
-	BlockNumber string    `gorm:"column:block_number" json:"block_number"`
-	LogIndex    string    `gorm:"column:log_index" json:"log_index"`
-	CreateTime  time.Time `gorm:"column:create_time" json:"create_time"`
+	SwapType    int    `gorm:"column:swap_type" json:"swap_type"` // 1 swap; 2 withdraw 3 wbnbTransfers 4 transfers
+	TxHash      string `gorm:"column:tx_hash" json:"tx_hash"`
+	BlockNumber int    `gorm:"column:block_number" json:"block_number"`
+	LogIndex    int    `gorm:"column:log_index" json:"log_index"`
+	UtcDateTime string `gorm:"column:create_time" json:"utc_date_time"`
+	CreateTime  int    `gorm:"column:create_time" json:"create_time"`
 }
 
 func NewSwap() *SwapTrace {
