@@ -36,13 +36,15 @@ type Pair struct {
 	TxHash      string `json:"txHash"`
 }
 
+var Pairs []models.Pair
+
 func GetPairFromGraph() {
 	var index uint64 = 1
 	key := []byte("pair_event_index")
 	val, closer, err := db.Pebble.Get(key)
 	if err == nil {
 		_ = closer.Close()
-		index = binary.BigEndian.Uint64(val)
+		index = binary.LittleEndian.Uint64(val)
 	}
 	url := "http://127.0.0.1:8000/subgraphs/name/swap"
 	method := "POST"
@@ -132,5 +134,15 @@ func InsertPair(event Pair) {
 				}
 			}
 		}
+	}
+}
+
+func UpdatePair() {
+	var pairs []models.Pair
+	err := db.PG.Model(models.Pair{}).Find(&pairs).Error
+	if err == nil {
+		Pairs = pairs
+	} else {
+		log.Println(err)
 	}
 }

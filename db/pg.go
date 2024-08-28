@@ -34,7 +34,7 @@ func InitPg() {
 	if err != nil {
 		log.Fatal("failed to connect database:", err)
 	}
-	_ = PG.Callback().Row().After("gorm:row").Register("after_row", After)
+	//_ = PG.Callback().Row().After("gorm:row").Register("after_row", After)
 
 	log.Println("Connected to Postgresql")
 }

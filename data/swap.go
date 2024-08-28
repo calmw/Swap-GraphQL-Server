@@ -46,7 +46,7 @@ func GetSwapFromGraph() {
 	val, closer, err := db.Pebble.Get(key)
 	if err == nil {
 		_ = closer.Close()
-		index = binary.BigEndian.Uint64(val)
+		index = binary.LittleEndian.Uint64(val)
 	}
 	url := "http://127.0.0.1:8000/subgraphs/name/swap"
 	method := "POST"
