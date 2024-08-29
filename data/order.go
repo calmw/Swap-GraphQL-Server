@@ -4,9 +4,12 @@ import (
 	"Swap-Server/db"
 	"Swap-Server/models"
 	"encoding/binary"
+	"errors"
 	"fmt"
 	"github.com/cockroachdb/pebble"
+	"gorm.io/gorm"
 	"log"
+	"time"
 )
 
 const StartBlockNumber = 1
@@ -18,12 +21,23 @@ func NewOrder() *Order {
 	return &Order{}
 }
 
-func (o *Order) Create() {
+func (o *Order) Task() {
+	o.Sync()
+
+	ticker := time.NewTicker(time.Second * 10)
+	for {
+		select {
+		case <-ticker.C:
+			o.Sync()
+		}
+	}
+}
+func (o *Order) Sync() {
 	swaps := o.getSwapTrace()
 	order := models.Order{}
 	for _, s := range swaps {
 		//if s.TxHash == "0xe737c9e817b4ab477a40685671b7e6506a8c9a30f419404c9427e62546b4f6ea" {
-		//
+		//if s.TxHash == "0xe737c9e817b4ab477a40685671b7e6506a8c9a30f419404c9427e62546b4f6ea" {
 		//	fmt.Println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 		//	fmt.Println(s.TxHash, s.Id, s.Amount, s.AmountIn)
 		//}
@@ -59,7 +73,26 @@ func (o *Order) Create() {
 }
 
 func (o *Order) Save(order models.Order) {
-	db.PG.Model(models.Order{}).Create(&order)
+	key := []byte(fmt.Sprintf("order_create_%d_%d", order.BlockNumber, order.LogIndex))
+	_, closer, err := db.Pebble.Get(key)
+	if err == nil {
+		closer.Close()
+	}
+	if errors.Is(err, pebble.ErrNotFound) {
+		whereCondition := fmt.Sprintf("block_number=%d and log_index=%d", order.BlockNumber, order.LogIndex)
+		err = db.PG.Model(models.Order{}).Where(whereCondition).First(&models.Order{}).Error
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			db.PG.Model(models.Order{}).Create(&order)
+			val := key
+			err = db.Pebble.Set(key, val, pebble.Sync)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+			_ = o.setBlockNumber(uint64(order.BlockNumber))
+		}
+	}
+
 }
 
 func (o *Order) isTransferToPair(to string) bool {

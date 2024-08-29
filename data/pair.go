@@ -145,4 +145,19 @@ func UpdatePair() {
 	} else {
 		log.Println(err)
 	}
+
+	ticker := time.NewTicker(time.Minute * 30)
+	for {
+		select {
+		case <-ticker.C:
+			err := db.PG.Model(models.Pair{}).Find(&pairs).Error
+			if err == nil {
+				Pairs = pairs
+			} else {
+				log.Println(err)
+			}
+
+		}
+	}
+
 }
