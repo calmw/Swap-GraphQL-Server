@@ -114,7 +114,7 @@ func InsertWithdraw(event Withdraw) {
 				TokenSymbol: event.TokenSymbol,
 				Receiver:    event.Receiver,
 				Amount:      event.Amount,
-				SwapType:    42,
+				SwapType:    2,
 				TxHash:      event.TxHash,
 				BlockNumber: blockNumber,
 				LogIndex:    logIndex,

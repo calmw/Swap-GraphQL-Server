@@ -18,6 +18,7 @@ func main() {
 	go data.GetTransferFromGraph()
 	go data.GetTransferWBNBFromGraph()
 	go data.GetWithDrawFromGraph()
+	//go data.GetBlockNumberFromGraph()
 
 	go data.UpdatePair()
 	go data.NewOrder().Task()

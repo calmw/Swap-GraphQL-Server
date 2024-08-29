@@ -127,9 +127,12 @@ func (o *Order) isTransferToPair(to string) bool {
 func (o *Order) getSwapTrace() []models.SwapTrace {
 	blockNumber := o.getBlockNumber()
 	var swapTraces []models.SwapTrace
-
-	whereCondition := fmt.Sprintf("block_number>%d", blockNumber)
-	err := db.PG.Model(models.SwapTrace{}).Where(whereCondition).Order("block_number asc, log_index asc, tx_hash asc").Find(&swapTraces).Error
+	number, err := GetBlockNumber()
+	if err != nil || (blockNumber >= number) {
+		return swapTraces
+	}
+	whereCondition := fmt.Sprintf("block_number>%d and block_number<%d", blockNumber, number-10)
+	err = db.PG.Model(models.SwapTrace{}).Where(whereCondition).Order("block_number asc, log_index asc, tx_hash asc").Find(&swapTraces).Error
 	if err != nil {
 		log.Println(err)
 	}
