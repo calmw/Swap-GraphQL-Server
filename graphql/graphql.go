@@ -71,10 +71,12 @@ var RootQuery = graphql.NewObject(graphql.ObjectConfig{
 			Type: graphql.String,
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				fmt.Println(p.Source, 111)
-				return struct {
-					Name string `json:"name"`
-					Age  string `json:"age"`
-				}{"ss", "18"}, nil
+				fmt.Println(SwapOrder{
+					Timestamp: time.Now().Unix(),
+				}.ToJson(), 222)
+				return SwapOrder{
+					Timestamp: time.Now().Unix(),
+				}.ToJson(), nil
 			},
 		},
 		"ping2": &graphql.Field{
@@ -93,8 +95,8 @@ var schema graphql.Schema
 
 func Handle1() *handler.Handler {
 	schemaConfig := graphql.SchemaConfig{
-		Query:        RootQuery,
-		Subscription: RootSubscription,
+		Query: RootQuery,
+		//Subscription: RootSubscription,
 	}
 
 	s, err := graphql.NewSchema(schemaConfig)

@@ -4,7 +4,6 @@ import (
 	"Swap-Server/data"
 	"Swap-Server/db"
 	gp "Swap-Server/graphql"
-	"Swap-Server/models"
 	"log"
 	"net/http"
 )
@@ -12,7 +11,7 @@ import (
 func main() {
 	db.InitPg()
 	db.InitPebble("./db/pebble_data")
-	_ = db.PG.AutoMigrate(&models.SwapTrace{}, &models.Order{}, &models.Pair{})
+	//_ = db.PG.AutoMigrate(&models.SwapTrace{}, &models.Order{}, &models.Pair{})
 
 	go data.GetSwapFromGraph()
 	go data.GetPairFromGraph()
