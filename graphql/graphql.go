@@ -5,6 +5,7 @@ import (
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/handler"
 	"log"
+	"strings"
 )
 
 func Handle1() *handler.Handler {
@@ -104,5 +105,5 @@ func parseParameter(p interface{}) string {
 	if p == nil {
 		return ""
 	}
-	return p.(string)
+	return strings.ToLower(p.(string))
 }
