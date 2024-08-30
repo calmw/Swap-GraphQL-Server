@@ -68,7 +68,7 @@ func Handle1() *handler.Handler {
 					},
 				},
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					user := parseParameter(p.Args["user"])
+					user := parseParameterWithLowerCase(p.Args["user"])
 					fromTokenSymbol := parseParameter(p.Args["from_token_symbol"])
 					toTokenSymbol := parseParameter(p.Args["to_token_symbol"])
 					//fmt.Println(user, fromTokenSymbol, toTokenSymbol)
@@ -101,9 +101,15 @@ func Handle1() *handler.Handler {
 	return h
 }
 
-func parseParameter(p interface{}) string {
+func parseParameterWithLowerCase(p interface{}) string {
 	if p == nil {
 		return ""
 	}
 	return strings.ToLower(p.(string))
+}
+func parseParameter(p interface{}) string {
+	if p == nil {
+		return ""
+	}
+	return p.(string)
 }
