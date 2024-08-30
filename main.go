@@ -13,12 +13,14 @@ import (
 
 func main() {
 	pgDsn := os.Getenv("PG_DSN")
-	if len(pgDsn) == 0 {
-		db.PG_DSN = "postgresql://root:root@localhost:5432/swap"
+	db.PG_DSN = "postgresql://root:root@localhost:5432/swap"
+	if len(pgDsn) > 0 {
+		db.PG_DSN = pgDsn
 	}
 	routerAddress := os.Getenv("RouterAddress")
-	if len(routerAddress) == 0 {
-		data.RouterAddress = "0xc5d4d7b9a90c060f1c7d389bc3a20eeb382aa665"
+	data.RouterAddress = "0xc5d4d7b9a90c060f1c7d389bc3a20eeb382aa665"
+	if len(routerAddress) > 0 {
+		data.RouterAddress = routerAddress
 	}
 
 	db.InitPg()

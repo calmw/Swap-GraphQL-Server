@@ -7,17 +7,16 @@ networks:
 
 services:
   swap_graphql_server:
-    image: calmw/mswap_graphql_server:0.0.5
+    image: calmw/mswap_graphql_server:0.1.0
     container_name: swap_graphql_server
     restart: always
     ports:
       - "9006:8081"
     environment:
-      - PG_DSN=postgresql://root:root@pg:8432/swap
-#      - PG_DSN=postgres://your_user:your_password@pg:5432/your_db
+      - PG_DSN=host=pg  user=root password=root dbname=swap port=5432 sslmode=disable
       - RouterAddress=0xc5d4d7b9a90c060f1c7d389bc3a20eeb382aa665
     volumes:
-      - ./data/pebble:/src/db/pebble_data
+      - ./docker_data/pebble_data:/src/db/pebble_data
     networks:
       - swap
     logging:
@@ -38,7 +37,7 @@ services:
       - POSTGRES_DB=swap
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - ./data/postgresql_data:/var/lib/postgresql/data
+      - ./docker_data/postgresql_data:/var/lib/postgresql/data
     networks:
       - swap
     logging:
