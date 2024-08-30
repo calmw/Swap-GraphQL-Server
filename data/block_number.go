@@ -69,7 +69,7 @@ import (
 //
 //func InsertBlockNumber(event BlockNumber) {
 //	key := []byte("block_number_event")
-//	err := db.Pebble.Set(key, []byte(event.BlockNumber), pebble.Sync)
+//	err := db.Pebble.Set(key, []byte(event.BlockNumber), pebble.ParseOrderData)
 //	if err != nil {
 //		log.Println(err)
 //	}

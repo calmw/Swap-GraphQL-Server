@@ -109,6 +109,7 @@ func InsertSwap(event Swap) {
 	_, closer, err := db.Pebble.Get(key)
 	if err == nil {
 		closer.Close()
+		return
 	}
 	if errors.Is(err, pebble.ErrNotFound) {
 		blockNumber, _ := strconv.Atoi(event.BlockNumber)

@@ -105,6 +105,7 @@ func InsertTransfer(event Transfer) {
 	_, closer, err := db.Pebble.Get(key)
 	if err == nil {
 		closer.Close()
+		return
 	}
 	if errors.Is(err, pebble.ErrNotFound) {
 		blockNumber, _ := strconv.Atoi(event.BlockNumber)
@@ -129,7 +130,7 @@ func InsertTransfer(event Transfer) {
 			if err == nil {
 				err = db.Pebble.Set(key, []byte(event.ID), pebble.Sync)
 				if err != nil {
-					log.Println(err)
+					log.Println(err, 99999)
 					return
 				}
 			}

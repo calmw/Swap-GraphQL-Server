@@ -102,6 +102,7 @@ func InsertWithdraw(event Withdraw) {
 	_, closer, err := db.Pebble.Get(key)
 	if err == nil {
 		closer.Close()
+		return
 	}
 	if errors.Is(err, pebble.ErrNotFound) {
 		blockNumber, _ := strconv.Atoi(event.BlockNumber)

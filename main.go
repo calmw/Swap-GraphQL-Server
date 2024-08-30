@@ -4,22 +4,25 @@ import (
 	"Swap-Server/data"
 	"Swap-Server/db"
 	gp "Swap-Server/graphql"
+	"Swap-Server/models"
 	"log"
 	"net/http"
+	"time"
 )
 
 func main() {
 	db.InitPg()
 	db.InitPebble("./db/pebble_data")
-	//_ = db.PG.AutoMigrate(&models.SwapTrace{}, &models.Order{}, &models.Pair{})
+	_ = db.PG.AutoMigrate(&models.SwapTrace{}, &models.Order{}, &models.Pair{}, &models.FailedTx{})
 
-	go data.GetSwapFromGraph()
 	go data.GetPairFromGraph()
+	go data.GetSwapFromGraph()
 	go data.GetTransferFromGraph()
 	go data.GetTransferWBNBFromGraph()
 	go data.GetWithDrawFromGraph()
-	//go data.GetBlockNumberFromGraph()
 
+	time.Sleep(time.Minute)
+	data.SetPair()
 	go data.UpdatePair()
 	go data.NewOrder().Task()
 

@@ -50,7 +50,6 @@ func GetPairFromGraph() {
 	method := "POST"
 	for {
 		time.Sleep(time.Second * 10)
-		//query := fmt.Sprintf(`{"query":"{ swaps(first:50 skip:%d orderBy:blockNumber orderDirection:asc ){ id sender pair pairName amount0In amount1In amount0Out amount1Out to blockNumber logIndex utcTime timestamp txHash } }" }`, (index-1)*50)
 		query := fmt.Sprintf(`{"query":"{ pairCreateds(first:50 skip:%d orderBy:blockNumber orderDirection:asc ) { id pair token0 token1 pair pairName blockNumber logIndex utcTime timestamp txHash } }" }`, (index-1)*50)
 		payload := strings.NewReader(query)
 		client := &http.Client{Timeout: time.Second * 30}
@@ -106,6 +105,7 @@ func InsertPair(event Pair) {
 	_, closer, err := db.Pebble.Get(key)
 	if err == nil {
 		closer.Close()
+		return
 	}
 	if errors.Is(err, pebble.ErrNotFound) {
 		blockNumber, _ := strconv.Atoi(event.BlockNumber)
@@ -114,12 +114,9 @@ func InsertPair(event Pair) {
 		err = db.PG.Model(pair).Where(whereCondition).First(&pair).Error
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			timestamp, _ := strconv.Atoi(event.Timestamp)
-
 			err = db.PG.Model(&pair).Create(&models.Pair{
 				Pair:        event.Pair,
 				PairName:    event.PairName,
-				Token0:      event.PairName,
-				Token1:      event.PairName,
 				TxHash:      event.TxHash,
 				BlockNumber: blockNumber,
 				LogIndex:    logIndex,
@@ -139,13 +136,6 @@ func InsertPair(event Pair) {
 
 func UpdatePair() {
 	var pairs []models.Pair
-	err := db.PG.Model(models.Pair{}).Find(&pairs).Error
-	if err == nil {
-		Pairs = pairs
-	} else {
-		log.Println(err)
-	}
-
 	ticker := time.NewTicker(time.Minute * 30)
 	for {
 		select {
@@ -156,8 +146,16 @@ func UpdatePair() {
 			} else {
 				log.Println(err)
 			}
-
 		}
 	}
+}
 
+func SetPair() {
+	var pairs []models.Pair
+	err := db.PG.Model(models.Pair{}).Find(&pairs).Error
+	if err == nil {
+		Pairs = pairs
+	} else {
+		log.Println(err)
+	}
 }
