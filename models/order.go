@@ -37,10 +37,12 @@ func (o *Order) Query(user, fromTokenSymbol, toTokenSymbol string) ([]map[string
 		//model.Where("user = ?", user)
 	}
 	if len(fromTokenSymbol) > 0 {
-		model.Where("from_token_symbol=?", fromTokenSymbol)
+		where := fmt.Sprintf("from_token_symbol='%s'", fromTokenSymbol)
+		model.Where(where)
 	}
 	if len(toTokenSymbol) > 0 {
-		model.Where("to_token_symbol=?", toTokenSymbol)
+		where := fmt.Sprintf("to_token_symbol='%s'", toTokenSymbol)
+		model.Where(where)
 	}
 	err := model.Find(&records).Error
 	if err != nil {

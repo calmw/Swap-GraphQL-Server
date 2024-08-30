@@ -1,0 +1,46 @@
+# Copyright 2024 calm.wang@hotmail.com
+# SPDX-License-Identifier: LGPL-3.0-only
+version: '3.9'
+
+networks:
+  swap:
+
+services:
+  swap_graphql_server:
+    image: calmw/mswap_graphql_server:0.0.1
+    container_name: swap_graphql_server
+    restart: always
+    ports:
+      - 9006:8081
+    environment:
+      - RouterAddress=0xc5d4d7b9a90c060f1c7d389bc3a20eeb382aa665
+    volumes:
+      - ./data/pebble:/src/db/pebble_data
+    networks:
+      - swap
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "1"
+
+  pg:
+    image: postgres:latest
+    container_name: pg
+    restart: always
+    ports:
+      - 8432:5432
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=swap
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - ./data/postgresql_data:/var/lib/postgresql/data
+    networks:
+      - swap
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "1"

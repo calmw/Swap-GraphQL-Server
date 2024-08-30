@@ -59,9 +59,14 @@ func Handle1() *handler.Handler {
 					"user": &graphql.ArgumentConfig{
 						Type: graphql.String,
 					},
+					"from_token_symbol": &graphql.ArgumentConfig{
+						Type: graphql.String,
+					},
+					"to_token_symbol": &graphql.ArgumentConfig{
+						Type: graphql.String,
+					},
 				},
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					// 这里是获取用户的逻辑
 					user := parseParameter(p.Args["user"])
 					fromTokenSymbol := parseParameter(p.Args["from_token_symbol"])
 					toTokenSymbol := parseParameter(p.Args["to_token_symbol"])
@@ -72,15 +77,6 @@ func Handle1() *handler.Handler {
 					} else {
 						return data, nil
 					}
-					// 这里是获取用户的逻辑
-					//res := make([]map[string]interface{}, 0)
-					//res = append(res, map[string]interface{}{
-					//	"User":       user,
-					//	"from_token": "John Doe",
-					//	"to_token":   "john@example.com",
-					//})
-					//fmt.Println(res)
-					//return res, nil
 				},
 			},
 		},
