@@ -17,6 +17,8 @@ import (
 	"time"
 )
 
+var GraphHost = "http://127.0.0.1:8000/"
+
 type PairData struct {
 	Data struct {
 		Pairs []Pair `json:"pairCreateds"`
@@ -46,7 +48,7 @@ func GetPairFromGraph() {
 		_ = closer.Close()
 		index = binary.LittleEndian.Uint64(val)
 	}
-	url := "http://127.0.0.1:8000/subgraphs/name/swap"
+	url := fmt.Sprintf("%ssubgraphs/name/swap", GraphHost)
 	method := "POST"
 	for {
 		time.Sleep(time.Second * 10)

@@ -2,11 +2,11 @@
 
 ``` shell
 # build 
-docker build -t mswap_graphql_server:0.1.1 . 
+docker build -t mswap_graphql_server:0.1.2 . 
 # tag
-docker tag mswap_graphql_server:0.1.1 calmw/mswap_graphql_server:0.1.1
+docker tag mswap_graphql_server:0.1.2 calmw/mswap_graphql_server:0.1.2
 # push
-docker push calmw/mswap_graphql_server:0.1.1
+docker push calmw/mswap_graphql_server:0.1.2
 ```
 
 ## X86版本
@@ -15,4 +15,4 @@ docker push calmw/mswap_graphql_server:0.1.1
 
 ## Arm版本
 
-- calmw/mswap_graphql_server:0.1.1
+- calmw/mswap_graphql_server:0.1.2

@@ -10,7 +10,7 @@ import (
 )
 
 var PG *gorm.DB
-var PG_DSN string
+var PG_DSN = "postgresql://root:root@localhost:5432/swap"
 
 func InitPg() {
 	log.Println("Connecting to Postgresql")
