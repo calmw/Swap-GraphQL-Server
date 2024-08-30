@@ -10,11 +10,11 @@ import (
 )
 
 var PG *gorm.DB
+var PG_DSN string
 
 func InitPg() {
 	log.Println("Connecting to Postgresql")
 	var err error
-	dsn := "host=127.0.0.1 user=root password=root dbname=swap port=8432 sslmode=disable"
 	// 创建日志配置
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer（日志输出的地方，这里是标准输出）
@@ -27,7 +27,7 @@ func InitPg() {
 
 	PG, err = gorm.Open(postgres.New(
 		postgres.Config{
-			DSN: dsn, // DSN data source name
+			DSN: PG_DSN, // DSN data source name
 		}), &gorm.Config{
 		Logger: newLogger,
 	})

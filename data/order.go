@@ -12,7 +12,8 @@ import (
 )
 
 const MaxFailedTimes = 10
-const RouterAddress = "0xc5d4d7b9a90c060f1c7d389bc3a20eeb382aa665"
+
+var RouterAddress = "0xc5d4d7b9a90c060f1c7d389bc3a20eeb382aa665"
 
 type SwapChanData struct {
 	Swaps  []models.SwapTrace
