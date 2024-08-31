@@ -7,7 +7,7 @@ networks:
 
 services:
   swap_graphql_server:
-    image: calmw/mswap_graphql_server:0.1.4
+    image: calmw/mswap_graphql_server:0.1.5
     container_name: swap_graphql_server
     restart: always
     ports:

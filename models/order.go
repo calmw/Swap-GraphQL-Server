@@ -90,14 +90,3 @@ func StructToMap(s interface{}) (map[string]interface{}, error) {
 	}
 	return result, nil
 }
-
-//func StructToMap(s interface{}) map[string]interface{} {
-//	t := reflect.TypeOf(s)
-//	v := reflect.ValueOf(s)
-//
-//	var data = make(map[string]interface{})
-//	for i := 0; i < t.NumField(); i++ {
-//		data[t.Field(i).Name] = v.Field(i).Interface()
-//	}
-//	return data
-//}
