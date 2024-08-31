@@ -26,7 +26,7 @@ func NewOrder() *Order {
 	return &Order{}
 }
 
-func (o *Order) Query(user, fromTokenSymbol, toTokenSymbol string) ([]map[string]interface{}, error) {
+func (o *Order) Query(user, fromTokenSymbol, toTokenSymbol, fromTokenAddress, toTokenAddress, orderBy string) ([]map[string]interface{}, error) {
 	var records []Order
 	var result = make([]map[string]interface{}, 0)
 
@@ -43,6 +43,17 @@ func (o *Order) Query(user, fromTokenSymbol, toTokenSymbol string) ([]map[string
 	if len(toTokenSymbol) > 0 {
 		where := fmt.Sprintf("to_token_symbol='%s'", toTokenSymbol)
 		model.Where(where)
+	}
+	if len(fromTokenAddress) > 0 {
+		where := fmt.Sprintf("from_token='%s'", fromTokenAddress)
+		model.Where(where)
+	}
+	if len(toTokenAddress) > 0 {
+		where := fmt.Sprintf("to_token='%s'", toTokenAddress)
+		model.Where(where)
+	}
+	if len(orderBy) > 0 {
+		model.Order(orderBy)
 	}
 	err := model.Find(&records).Error
 	if err != nil {

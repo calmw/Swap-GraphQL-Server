@@ -2,6 +2,7 @@ package graphql
 
 import (
 	"Swap-Server/models"
+	"fmt"
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/handler"
 	"log"
@@ -55,7 +56,8 @@ func Handle1() *handler.Handler {
 		Fields: graphql.Fields{
 			"swaps": &graphql.Field{
 				//Type: userType,
-				Type: graphql.NewList(userType), // 返回数组
+				Description: "get user swap records list",
+				Type:        graphql.NewList(userType), // 返回数组
 				Args: graphql.FieldConfigArgument{
 					"user": &graphql.ArgumentConfig{
 						Type: graphql.String,
@@ -66,13 +68,21 @@ func Handle1() *handler.Handler {
 					"to_token_symbol": &graphql.ArgumentConfig{
 						Type: graphql.String,
 					},
+					"order_by": &graphql.ArgumentConfig{
+						Type: graphql.String,
+					},
 				},
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					user := parseParameterWithLowerCase(p.Args["user"])
 					fromTokenSymbol := parseParameter(p.Args["from_token_symbol"])
 					toTokenSymbol := parseParameter(p.Args["to_token_symbol"])
-					//fmt.Println(user, fromTokenSymbol, toTokenSymbol)
-					data, err := models.NewOrder().Query(user, fromTokenSymbol, toTokenSymbol)
+					fromTokenAddress := parseParameterWithLowerCase(p.Args["from_token_address"])
+					toTokenAddress := parseParameterWithLowerCase(p.Args["to_token_address"])
+					orderBy := parseParameter(p.Args["order_by"])
+					fmt.Println(fmt.Sprintf("user:%s, fromTokenSymbol:%s, toTokenSymbol:%s, fromTokenAddress:%s, toTokenAddress:%s, orderBy:%s",
+						user, fromTokenSymbol, toTokenSymbol, fromTokenAddress, toTokenAddress, orderBy,
+					))
+					data, err := models.NewOrder().Query(user, fromTokenSymbol, toTokenSymbol, fromTokenAddress, toTokenAddress, orderBy)
 					if err != nil {
 						return "", err
 					} else {
